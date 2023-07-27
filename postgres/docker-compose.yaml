@@ -10,8 +10,7 @@ services:
       POSTGRES_DB: neo_db_pg
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-    networks:
-      - neo-project-net
+
     ports:
       - "5432:5432"
 
@@ -22,19 +21,15 @@ services:
       PGADMIN_DEFAULT_EMAIL: alekskarrrl@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
 
-    networks:
-      - neo-project-net
     ports:
       - "8082:80"
 
 volumes:
   neo_pg:
     name: neo_pg
-  neo_add_volume:
-    name: neo_add_volume
 
 networks:
-  neo-project-net:
+  default:
     name: neo-project-net
 
 

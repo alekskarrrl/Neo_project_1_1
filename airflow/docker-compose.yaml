@@ -101,8 +101,6 @@ services:
       retries: 5
       start_period: 5s
     restart: always
-    networks:
-      - airflow-net
 
   redis:
     image: redis:latest
@@ -115,8 +113,6 @@ services:
       retries: 50
       start_period: 30s
     restart: always
-    networks:
-      - airflow-net
 
   airflow-webserver:
     <<: *airflow-common
@@ -135,8 +131,8 @@ services:
       airflow-init:
         condition: service_completed_successfully
     networks:
-      - airflow-net
       - neo-project-net
+      - default
 
   airflow-scheduler:
     <<: *airflow-common
@@ -152,8 +148,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - airflow-net
 
   airflow-worker:
     <<: *airflow-common
@@ -177,7 +171,7 @@ services:
       airflow-init:
         condition: service_completed_successfully
     networks:
-      - airflow-net
+      - default
       - neo-project-net
 
   airflow-triggerer:
@@ -194,8 +188,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - airflow-net
 
   airflow-init:
     <<: *airflow-common
@@ -274,8 +266,6 @@ services:
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
-    networks:
-      - airflow-net
 
   airflow-cli:
     <<: *airflow-common
@@ -289,8 +279,6 @@ services:
       - bash
       - -c
       - airflow
-    networks:
-      - airflow-net
 
   # You can enable flower by adding "--profile flower" option e.g. docker-compose --profile flower up
   # or by explicitly targeted on the command line e.g. docker-compose up flower.
@@ -313,14 +301,12 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    networks:
-      - airflow-net
 
 volumes:
   postgres-db-volume:
 
 networks:
-  airflow-net:
+  default:
     name: airflow-net
   neo-project-net:
     name: neo-project-net
