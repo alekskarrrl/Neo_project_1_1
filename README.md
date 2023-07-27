@@ -71,7 +71,7 @@ User / Pass -  `admin / admin`
 
 ## Airflow
 
-Добавляем подключение к postgres
+Добавляем подключение к postgres  
 Name  `neo_db_pg`  
 Host `neo_db_pg`  (или по имени сервиса: `postgres-db`)  
 Schema `neo_db_pg`  
