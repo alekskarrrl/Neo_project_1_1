@@ -1,0 +1,143 @@
+CREATE SCHEMA IF NOT EXISTS LOGS;
+CREATE SCHEMA IF NOT EXISTS DS;
+--DROP SCHEMA DS
+
+DROP TABLE DS.FT_BALANCE_F CASCADE;
+DROP TABLE DS.FT_POSTING_F CASCADE;
+DROP TABLE DS.MD_ACCOUNT_D CASCADE;
+DROP TABLE DS.MD_CURRENCY_D CASCADE;
+DROP TABLE DS.MD_EXCHANGE_RATE_D CASCADE;
+DROP TABLE DS.MD_LEDGER_ACCOUNT_S CASCADE;
+
+CREATE TABLE IF NOT EXISTS DS.FT_BALANCE_F (
+	ON_DATE	date NOT NULL,
+	ACCOUNT_RK	NUMERIC NOT NULL,
+	CURRENCY_RK	NUMERIC,
+	BALANCE_OUT FLOAT,
+	CONSTRAINT ft_balance_f_pk PRIMARY KEY (ON_DATE, ACCOUNT_RK)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS DS.FT_POSTING_F (
+	OPER_DATE			date NOT NULL,
+	CREDIT_ACCOUNT_RK	NUMERIC NOT NULL,
+	DEBET_ACCOUNT_RK	NUMERIC NOT NULL,
+	CREDIT_AMOUNT		FLOAT,
+	DEBET_AMOUNT		FLOAT,
+	CONSTRAINT ft_posting_f_pk PRIMARY KEY (OPER_DATE, CREDIT_ACCOUNT_RK, DEBET_ACCOUNT_RK)
+
+);
+
+
+CREATE TABLE IF NOT EXISTS DS.MD_ACCOUNT_D (
+	DATA_ACTUAL_DATE		date NOT NULL,
+	DATA_ACTUAL_END_DATE	date NOT NULL,
+	ACCOUNT_RK				NUMERIC NOT NULL,
+	ACCOUNT_NUMBER			varchar(20) NOT NULL,
+	CHAR_TYPE				varchar(1) NOT NULL,
+	CURRENCY_RK				NUMERIC NOT NULL,
+	CURRENCY_CODE			varchar(3) NOT NULL,
+	CONSTRAINT md_account_d_pk PRIMARY KEY (DATA_ACTUAL_DATE, ACCOUNT_RK)
+
+);
+
+
+CREATE TABLE IF NOT EXISTS DS.MD_CURRENCY_D (
+	CURRENCY_RK				NUMERIC NOT NULL,
+	DATA_ACTUAL_DATE		date NOT NULL,
+	DATA_ACTUAL_END_DATE	date,
+	CURRENCY_CODE			varchar(3),
+	CODE_ISO_CHAR			varchar(3),
+	CONSTRAINT md_currency_d_pk PRIMARY KEY (CURRENCY_RK, DATA_ACTUAL_DATE)
+
+);
+
+
+
+CREATE TABLE IF NOT EXISTS DS.MD_EXCHANGE_RATE_D (
+	DATA_ACTUAL_DATE		date NOT NULL,
+	DATA_ACTUAL_END_DATE	date,
+	CURRENCY_RK				NUMERIC NOT NULL,
+	REDUCED_COURCE			FLOAT,
+	CODE_ISO_NUM			varchar(3),
+	CONSTRAINT md_exchange_rate_d_pk PRIMARY KEY (DATA_ACTUAL_DATE, CURRENCY_RK)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS DS.MD_LEDGER_ACCOUNT_S(
+	CHAPTER								char(1),
+	CHAPTER_NAME						varchar(16),
+	SECTION_NUMBER						integer,
+	SECTION_NAME						varchar(22),
+	SUBSECTION_NAME						varchar(21),
+	LEDGER1_ACCOUNT						INTEGER,
+	LEDGER1_ACCOUNT_NAME				varchar(47),
+	LEDGER_ACCOUNT						INTEGER NOT NULL,
+	LEDGER_ACCOUNT_NAME					varchar(153),
+	CHARACTERISTIC						char(1),
+	IS_RESIDENT							INTEGER,
+	IS_RESERVE							INTEGER,
+	IS_RESERVED							INTEGER,
+	IS_LOAN								INTEGER,
+	IS_RESERVED_ASSETS					INTEGER,
+	IS_OVERDUE							INTEGER,
+	IS_INTEREST							INTEGER,
+	PAIR_ACCOUNT						varchar(5),
+	START_DATE							date NOT NULL,
+	END_DATE							date,
+	IS_RUB_ONLY							INTEGER,
+	MIN_TERM							varchar(1),
+	MIN_TERM_MEASURE					varchar(1),
+	MAX_TERM							varchar(1),
+	MAX_TERM_MEASURE					varchar(1),
+	LEDGER_ACC_FULL_NAME_TRANSLIT		varchar(1),
+	IS_REVALUATION						varchar(1),
+	IS_CORRECT							varchar(1),
+	CONSTRAINT md_ledger_account_s_pk PRIMARY KEY (LEDGER_ACCOUNT, START_DATE)
+
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS LOGS.LOG_LOADING (
+	load_id					SERIAL,
+	started_at				timestamp,
+	finished_at				timestamp,
+	CONSTRAINT log_loading_pk PRIMARY KEY (load_id)
+
+);
+
+CREATE TABLE IF NOT EXISTS LOGS.LOG_TABLES (
+	event_time				timestamp,
+	load_id					integer,
+	source_table			varchar(30),
+	event_type				varchar(20),
+	rows_affected			integer,
+	CONSTRAINT log_tables_pk PRIMARY KEY (event_time, source_table),
+	CONSTRAINT loading_tables_fk FOREIGN KEY (load_id) REFERENCES LOGS.LOG_LOADING(load_id)
+
+);
+/*
+INSERT INTO LOGS.log_loading (started_at, finished_at) VALUES (Current_timestamp, Null);
+UPDATE LOGS.log_loading SET finished_at = Current_timestamp
+WHERE load_id = 1;
+*/
+
+SELECT log_l.load_id, 
+		started_at, 
+		finished_at, 
+		event_time, 
+		source_table, 
+		event_type, 
+		rows_affected, 
+		(event_time - started_at) as load_duration 
+FROM LOGS.log_loading log_l LEFT JOIN LOGS.log_tables log_t ON log_l.load_id = log_t.load_id;
+
+
+
+Select * From LOGS.log_loading;
+Select * From LOGS.log_tables;
+
