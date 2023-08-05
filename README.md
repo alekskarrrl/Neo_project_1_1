@@ -47,7 +47,8 @@
 
 ### Демо 1.1
 
-Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/drive/folders/1WyyQH9z0u-7FtLvH-rslwsaq3C2sUj1b?usp=sharing)
+Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/file/d/19JQVqrtBoD1C89CvFrhccjgah0NizC2F/view?usp=sharing)
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -139,7 +140,7 @@ User / Pass -  `admin / admin`
 
 ### Демо 1.2
 
-Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/drive/)
+Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/file/d/1J-Fqdxr4wxQfgZIWSTpmstrSkot-G6sg/view?usp=sharing)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>  
 

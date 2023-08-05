@@ -75,7 +75,6 @@ def call_looped_fill_turnover(on_date):
     cursor = pg_conn.cursor()
     pg_conn.autocommit = True
     cursor.execute(query)
-    # pg_conn.commit()
     cursor.close()
     pg_conn.close()
 
@@ -90,7 +89,6 @@ def call_fill_f101_round_f(on_date):
     cursor = pg_conn.cursor()
     pg_conn.autocommit = True
     cursor.execute(query)
-    # pg_conn.commit()
     cursor.close()
     pg_conn.close()
 

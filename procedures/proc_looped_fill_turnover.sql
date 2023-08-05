@@ -12,6 +12,7 @@ begin
 	WHILE onDay <= date_to LOOP
     	call ds.fill_account_turnover_f(onDay);
 		onDay = onDay + 1;
+		PERFORM pg_sleep(2);
 	END LOOP;
 	
 end;$$
