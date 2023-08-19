@@ -92,7 +92,7 @@ def fill_table(tbl_name, file_path, pk, need_date_format=False, format_string=No
 
     # BEGIN Call logs.write_log_info with parameters:
     load_id = context["task_instance"].xcom_pull(task_ids="start_log", key="load_id")
-    i_message = f"[BEGIN] fill_table (table_name = {tbl_name}, file_path = {file_path}, primary_key = [{', '.join(pk)}]"
+    i_message = f"[BEGIN] fill_table (table_name = {tbl_name}, file_path = {file_path}, primary_key = [{', '.join(pk)}])"
     i_message_type = 1
     pipeline_run_id = load_id
     event_type = 'python fill_table'
@@ -124,7 +124,7 @@ def log_table(table_name, **context):
                                                    key="row_count")
 
     # END Call logs.write_log_info with parameters:
-    i_message = f"[END] fill_table (table_name = {table_name}"
+    i_message = f"[END] fill_table (table_name = {table_name})"
     i_message_type = 1
     pipeline_run_id = load_id
     event_type = 'python log_table'
@@ -216,7 +216,7 @@ def save_f101_f(file_path, table_name, **context):
 
     # Call logs.write_log_info with parameters:
     load_id = context["task_instance"].xcom_pull(task_ids="start_log", key="load_id")
-    i_message = f"Copy table to csv (table_name = {table_name}, file_path = {file_path}"
+    i_message = f"Copy table to csv (table_name = {table_name}, file_path = {file_path})"
     i_message_type = 1
     pipeline_run_id = load_id
     event_type = 'python save_f101_f'
@@ -242,7 +242,7 @@ def load_f101_f_copy(table_original, table_copy, csv_file_path, **context):
 
     # Call logs.write_log_info - Create copy of table
     load_id = context["task_instance"].xcom_pull(task_ids="start_log", key="load_id")
-    i_message = f"Create copy of table (table_original = {table_original}, table_copy = {table_copy}"
+    i_message = f"Create copy of table (table_original = {table_original}, table_copy = {table_copy})"
     i_message_type = 1
     pipeline_run_id = load_id
     event_type = 'python load_f101_f_copy'
@@ -260,7 +260,7 @@ def load_f101_f_copy(table_original, table_copy, csv_file_path, **context):
     pg_conn.commit()
 
     # Call logs.write_log_info - Delete from table
-    i_message = f"Delete from table (delete_from_table = {table_copy}"
+    i_message = f"Delete from table (delete_from_table = {table_copy})"
     call_write_log_info(i_message, i_message_type, pipeline_run_id, event_type, rows_affected, info_)
 
     # Загрузим csv в копию таблицы countries - dm.dm_f101_round_f_v2
@@ -272,7 +272,7 @@ def load_f101_f_copy(table_original, table_copy, csv_file_path, **context):
     pg_conn.close()
 
     # Call logs.write_log_info - Copy from file to table
-    i_message = f"Copy data from csv to table (copy_to_table = {table_copy}, copy_from_csv = {csv_file_path}"
+    i_message = f"Copy data from csv to table (copy_to_table = {table_copy}, copy_from_csv = {csv_file_path})"
     call_write_log_info(i_message, i_message_type, pipeline_run_id, event_type, rows_affected, info_)
 
 
@@ -379,8 +379,6 @@ with DAG(dag_id="neo_project",
     )
 
     # ****************** Project 1.4  ********************
-
-
 
     # FLOW - оставшиеся зависимости
     start_log >> sleep_5sec
