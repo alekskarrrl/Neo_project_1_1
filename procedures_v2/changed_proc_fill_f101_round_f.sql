@@ -1,10 +1,4 @@
---CALL ds.fill_account_turnover_f(to_date('2018-01-31','yyyy-mm-dd'), 'some message');
 --CALL dm.fill_f101_round_f(to_date('2018-01-31','yyyy-mm-dd'), 'some message');
---CALL dm.looped_fill_turnover(to_date('2018-01-31','yyyy-mm-dd'), 'some message')
-
-
--- dm.fill_f101_round_f -changes
-
 
 create or replace procedure dm.fill_f101_round_f ( 
   i_OnDate  date,

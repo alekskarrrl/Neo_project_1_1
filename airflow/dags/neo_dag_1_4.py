@@ -141,9 +141,6 @@ def log_table(table_name, **context):
 # Loading is finished
 def end_log(**context):
     load_id = context["task_instance"].xcom_pull(task_ids="start_log", key="load_id")
-    # pg_hook = PostgresHook(postgres_conn_id="neo_db_pg")
-    # query = f"""UPDATE LOGS.log_loading SET finished_at = Current_timestamp
-    #             WHERE load_id = {load_id}"""
 
     # Call logs.write_log_info with parameters:
     i_message = 'Filling tables with Airflow finished'
@@ -157,13 +154,6 @@ def end_log(**context):
             f'task_id = {context["task"].task_id}'
 
     call_write_log_info(i_message, i_message_type, pipeline_run_id, event_type, rows_affected, info_)
-
-    # pg_conn = pg_hook.get_conn()
-    # cursor = pg_conn.cursor()
-    # cursor.execute(query)
-    # pg_conn.commit()
-    # pg_conn.close()
-    #
 
 
 # Call postgres procedure dm.looped_fill_turnover

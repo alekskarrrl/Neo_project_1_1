@@ -1,6 +1,4 @@
--- CALL ds.fill_account_turnover_f(to_date('2018-01-10','yyyy-mm-dd'), 'Airflow some message')
---CALL dm.fill_f101_round_f(to_date('2018-01-11','yyyy-mm-dd'));
---CALL dm.looped_fill_turnover(to_date('2018-01-31','yyyy-mm-dd'))
+-- CALL ds.fill_account_turnover_f(to_date('2018-01-10','yyyy-mm-dd'), 'some message')
 
 create or replace procedure ds.fill_account_turnover_f (
    i_OnDate date,

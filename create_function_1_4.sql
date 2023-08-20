@@ -1,5 +1,4 @@
-	
-		
+
 CREATE OR REPLACE FUNCTION ds.min_max_posting(onDate date)
 	returns table ("Category" text,
 					"Entered_date" date,
