@@ -202,7 +202,7 @@ User / Pass -  `admin / admin`
 
 ### Демо 1.3
 
-Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/)
+Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/file/d/16eHrP4PHUgH1a3FHUBMbzdApqPtpRPqg/view?usp=sharing)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>  
 
@@ -260,7 +260,7 @@ User / Pass -  `admin / admin`
 
 ### Демо 1.4
 
-Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/)
+Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/file/d/1n7tuke9BFJiZfBsiB9oWnbn6LjOXjNPt/view?usp=sharing)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>  
 
