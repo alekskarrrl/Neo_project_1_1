@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+   namenode:
+      image: apache/hadoop:3
+      hostname: namenode
+      command: ["hdfs", "namenode"]
+      ports:
+        - "9870:9870"
+      env_file:
+        - ./config
+      environment:
+        HADOOP_HOME: "/opt/hadoop"
+        ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+      volumes:
+         - ./name_node_data:/opt/hadoop/dfs/name
+   datanode:
+      image: apache/hadoop:3
+      command: ["hdfs", "datanode"]
+      environment:
+        HADOOP_HOME: "/opt/hadoop"
+      env_file:
+        - config
+
+      volumes:
+        - ./data_node_data:/opt/hadoop/dfs/data
+   resourcemanager:
+      image: apache/hadoop:3
+      hostname: resourcemanager
+      command: ["yarn", "resourcemanager"]
+      environment:
+        HADOOP_HOME: "/opt/hadoop"
+      ports:
+         - "8088:8088"
+         - "8888:8888"
+      env_file:
+        - ./config
+      volumes:
+        - ./test.sh:/opt/test.sh
+        - ./notebooks:/opt/notebooks
+   nodemanager:
+      image: apache/hadoop:3
+      command: ["yarn", "nodemanager"]
+      environment:
+        HADOOP_HOME: "/opt/hadoop"
+      env_file:
+        - ./config
+

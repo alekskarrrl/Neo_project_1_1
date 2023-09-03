@@ -2,3 +2,12 @@ venv
 __pycache__
 .idea
 draft.py
+hadoop_docker/data
+hadoop_docker/data_node_data
+hadoop_docker/name_node_data
+hadoop_docker/notebooks/.ipynb_checkpoints
+hadoop_docker/notebooks/.Trash*
+*.zip
+Home_work_info*.txt
+/Neo_project_1_3/
+/Neo_project_1_4/
