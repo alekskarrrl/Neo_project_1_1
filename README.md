@@ -22,6 +22,13 @@
   * [Демо 1.4](#демо-14)
   * [Реализация по заданию 1.4](#реализация-по-заданию-14)
   * [Airflow DAG 1.4](#airflow-dag-14)
+* [Задание 2.1](#задание-21)
+  * [Демо 2.1](#демо-21)
+  * [Настройка среды](#настройка-среды)
+    * [Установка Spark](#установка-spark)
+    * [Установка и настройка Jupyter Notebook](#установка-и-настройка-jupyter-notebook)
+    * [Jupyter notebook Themes](#jupyter-notebook-themes)
+  * [Реализация по заданию 2.1](#реализация-по-заданию-21)
 * [Инструменты](#инструменты)
 * [Источники данных](#источники-данных)
 * [Запуск контейнеров](#запуск-контейнеров)
@@ -292,6 +299,213 @@ User / Pass -  `admin / admin`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>  
 
+## Задание 2.1
+<details> 
+  <summary>Задание 2.1 </summary>
+
+В помощь, архитектор поделился с вами скриптами по настройке среды разработки со Spark. По мимо этого он отправил вам файл `Athletes.csv` и попросил выполнить несколько запросов для проверки работоспособности Spark-приложений.
+
+Настройте виртуальную машину с Ubuntu, установите на неё Spark (PySpark по желанию). Так же вы можете установить среду разработки - например Jupyter. Команды по установке и первичной настройке находятся в файле "ubuntu_commands.txt", рядом с ним ещё должен быть прикреплён файл «PySpark_Simple_example.txt».
+
+Проверочные задачи:
+
+  1. Сгенерировать DataFrame из трёх колонок `(row_id, discipline, season)` - олимпийские дисциплины по сезонам.  
+`row_id` - число порядкового номера строки;  
+`discipline` - наименование олимпиский дисциплины на английском (полностью маленькими буквами);  
+`season` - сезон дисциплины (summer / winter);  
+<br/>
+*Укажите не мнее чем по 5 дисциплин для каждого сезона.
+Сохраните DataFrame в csv-файл, разделитель колонок табуляция, первая строка должна содержать название колонок.
+<br/>
+Данные должны быть сохранены в виде 1 csv-файла а не множества маленьких.
+
+---
+  2. Прочитайте исходный файл `Athletes.csv`.  
+Посчитайте в разрезе дисциплин сколько всего спортсменов в каждой из дисциплин принимало участие.  
+Результат сохраните в формате parquet.  
+
+---
+
+  3. Прочитайте исходный файл `Athletes.csv`.  
+Посчитайте в разрезе дисциплин сколько всего спортсменов в каждой из дисциплин принимало участие.  
+Получившийся результат нужно объединить с сгенерированным вами DataFrame из 1-го задания и в итоге вывести количество участников, только по тем дисциплинам, что есть в вашем сгенерированном DataFrame.  
+Результат сохраните в формате parquet.  
+
+
+</details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Демо 2.1
+
+Ссылка на видеозапись демонстрации:  [Demo Video](https://drive.google.com/file/d/1TYvL5hCiSqhqiumC7ogv1W2NSrDS_FjT/view?usp=sharing)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Настройка среды
+
+Отправная точка - кластер hadoop на основе образа `apache/hadoop:3` (на текущий момент последняя версия 3.3.6) и `docker-compose.yaml`, взятого [здесь](https://hub.docker.com/r/apache/hadoop).
+docker-compose.yaml находится в папке [Neo_project_1_1/hadoop_docker](hadoop_docker/docker-compose.yaml)
+
+В файле [Neo_project_1_1/hadoop_docker/config](hadoop_docker/config)  добавим запись:  
+```text
+HDFS-SITE.XML_dfs.replication=1
+HDFS-SITE.XML_dfs.namenode.name.dir=/opt/hadoop/dfs/name
+HDFS-SITE.XML_dfs.datanode.data.dir=/opt/hadoop/dfs/data
+
+```
+
+#### Установка Spark
+Переходим на ноду `resourcemanager` и устанавливаем Spark.  
+Скачиваем и распаковываем [архив](https://dlcdn.apache.org/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz):  
+
+```shell
+# Go to home folder
+$ cd ~
+ 
+# Download tarball
+$ wget --no-check-certificate https://dlcdn.apache.org/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz
+
+# Extract
+$ tar -zxf spark-3.4.1-bin-hadoop3.tgz
+ 
+# Rename extracted folder to simple name
+$ mv spark-3.4.1-bin-hadoop3/ spark
+
+$ rm spark-3.4.1-bin-hadoop3.tgz
+```
+
+Добавим переменные окружения в файл `/opt/.bashrc`:  
+```shell
+export SPARK_HOME=/opt/hadoop/spark
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export PATH=$PATH:$SPARK_HOME/bin:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+```
+
+Применим настройки .bashrc:  
+```shell
+source .bashrc
+```
+
+Для проверки, что все работает можно запустить пример:
+
+```shell
+spark-submit --master yarn \
+--num-executors 4 \
+--executor-cores 2 \
+--executor-memory 640M \
+--class org.apache.spark.examples.JavaSparkPi \
+~/spark/examples/jars/spark-examples_2.12-3.4.1.jar 100
+
+```
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p> 
+
+#### Установка и настройка Jupyter Notebook
+
+
+Установим Python и virtualenv
+```shell
+sudo yum install python3-pip 
+sudo pip3 install virtualenv
+```
+
+Создадим директорию, где будут храниться виртуальные окружения.
+```shell
+cd /opt
+mkdir venv_space
+cd venv_space
+```
+Внутри каталога, создаем виртуальную среду для Python. 
+```shell
+virtualenv venv_jupyter
+```
+До установки Jupyter понадобится активация виртуальной среды. 
+```shell
+source venv_jupyter/bin/activate
+```
+
+После активации виртуальной среды инсталлируем jupyter.
+````shell
+pip3 install jupyter
+````
+Заустить приложение можно командой:
+````shell
+jupyter notebook --ip 0.0.0.0 --no-browser --port=8888
+````
+
+Установим еще несколько переменных окружения (`/opt/.bashrc`):  
+```shell
+# Define env Python to use
+export PYSPARK_PYTHON=/opt/venv_space/venv_jupyter/bin/python
+
+# Define IPython driver
+export PYSPARK_DRIVER_PYTHON=/opt/venv_space/venv_jupyter/bin/ipython3
+
+
+```
+Активируем виртуальное окружение venv_jupyter:
+
+```shell
+source /opt/venv_space/venv_jupyter/bin/activate
+```
+Установим необходимые python модули:
+  * Py4J позволяет программам, работающим в интерпретаторе Python, динамически обращаться к объектам Java внутри JVM. Py4J также позволяет программам Java вызывать объекты Python.  
+  * findspark - позволит импортировать pyspark как обычную python-библиотеку.  
+```shell
+pip3 install py4j
+pip3 install findspark
+```
+Запустим интерактивный режим python (ввести python3) и выполним команды:
+```pycon
+>>> import findspark
+>>> findspark.init('/opt/hadoop/spark')
+>>> import pyspark
+>>> quit()
+```
+
+Запустим Jupyter:
+
+```shell
+jupyter notebook --ip 0.0.0.0 --no-browser --port=8888
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p> 
+
+#### Jupyter notebook Themes
+
+Источник: https://github.com/dunovank/jupyter-themes/tree/master
+
+```shell
+# install jupyterthemes
+pip install jupyterthemes
+
+# upgrade to latest version
+pip install --upgrade jupyterthemes
+```
+Устанавливаем тему `gruvbox-dark`:
+```shell
+jt -t gruvboxd
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Реализация по заданию 2.1
+
+Для работы с jupyter notebook я создала директорию [Neo_project_1_1/hadoop_docker/notebooks](hadoop_docker/notebooks).  
+Она примонтирована к контейнеру (`/opt/notebooks`).  
+Здесь сохранен [notebook_2_1.ipynb](hadoop_docker/notebooks/notebook_2_1.ipynb) с выполненным заданием и исходный csv-файл.
+
+При старте jupyter notebook укажем опцию `--notebook-dir /opt/notebooks`
+
+```shell
+# Start jupyter
+jupyter notebook --no-browser --notebook-dir /opt/notebooks --ip=0.0.0.0 --port=8888
+```
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Инструменты
 
@@ -303,6 +517,7 @@ User / Pass -  `admin / admin`
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 ## Источники данных
 
