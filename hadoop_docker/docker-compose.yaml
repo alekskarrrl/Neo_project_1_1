@@ -8,6 +8,7 @@ services:
         - "9870:9870"
       env_file:
         - ./config
+
       environment:
         HADOOP_HOME: "/opt/hadoop"
         ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
@@ -29,11 +30,13 @@ services:
       command: ["yarn", "resourcemanager"]
       environment:
         HADOOP_HOME: "/opt/hadoop"
+
       ports:
          - "8088:8088"
          - "8888:8888"
       env_file:
         - ./config
+
       volumes:
         - ./test.sh:/opt/test.sh
         - ./notebooks:/opt/notebooks
@@ -44,4 +47,3 @@ services:
         HADOOP_HOME: "/opt/hadoop"
       env_file:
         - ./config
-
