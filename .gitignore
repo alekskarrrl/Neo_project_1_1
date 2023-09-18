@@ -11,3 +11,7 @@ hadoop_docker/notebooks/.Trash*
 Home_work_info*.txt
 /Neo_project_1_3/
 /Neo_project_1_4/
+hadoop_docker/notebooks/logs
+hadoop_docker/notebooks/mirr_md_account_d
+hadoop_docker/notebooks/data_deltas
+hadoop_docker/notebooks/drafts
